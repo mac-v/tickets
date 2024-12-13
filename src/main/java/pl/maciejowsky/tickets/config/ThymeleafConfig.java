@@ -6,6 +6,7 @@ import org.thymeleaf.spring6.SpringTemplateEngine;
 import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import pl.maciejowsky.tickets.enums.Currency;
 import pl.maciejowsky.tickets.enums.Reason;
+import pl.maciejowsky.tickets.enums.SortableColumn;
 import pl.maciejowsky.tickets.enums.Status;
 import pl.maciejowsky.tickets.repository.CompanyRepository;
 
@@ -13,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Configuration
 public class ThymeleafConfig {
@@ -21,8 +23,9 @@ public class ThymeleafConfig {
     private static final List<String> REASON_LIST = Arrays.stream(Reason.values())
             .map(Reason::getDescription)
             .toList();
-    private static final List<Currency> CURRENCY_LIST = List.of(Currency.values());
-    private static final List<Status> STATUS_LIST = List.of(Status.values());
+    private static final List<String> CURRENCY_LIST = Stream.of(Currency.values()).map(Currency::name).toList();
+    private static final List<String> STATUS_LIST = Stream.of(Status.values()).map(Status::name).toList();
+    private static final List<SortableColumn> SORTABLE_COLUMNS_LIST = Stream.of(SortableColumn.values()).toList();
 
     private final List<String> companyNames;
 
@@ -45,7 +48,8 @@ public class ThymeleafConfig {
                 "ticketReasons", REASON_LIST,
                 "currencyOptions", CURRENCY_LIST,
                 "paymentStatuses", STATUS_LIST,
-                "companyNames", companyNames
+                "companyNames", companyNames,
+                "sortableColumns", SORTABLE_COLUMNS_LIST
         ));
         System.out.println(companyNames);
         return viewResolver;

@@ -35,91 +35,128 @@
 </head>
 <body>
 <h1>Tickets</h1>
-<form method="get" th:action="@{/tickets/search}">
-
+<form method="get" th:action="@{/tickets/search}" th:object="${searchForm}">
     <div class="form-section">
+
         <div class="search">
             <h3>Search</h3>
             <label>
-                <input name="searchQuery" placeholder="By First Name, Last Name, Signature, Phone number" type="text">
+                <input name="searchQuery" placeholder="By First Name, Last Name, Signature, Phone number"
+                       th:value="*{searchQuery}" type="text">
+            </label>
+        </div>
+
+        <div class="filter">
+            <h3>Filter</h3>
+            <label>
+                <span><strong>Reason</strong></span>
+                <div>
+                    <label th:each="reason : ${ticketReasons}">
+                        <input name="reasons"
+                               th:checked="${searchForm.reasons != null and #lists.contains(searchForm.reasons, reason)}"
+                               th:value="${reason}"
+                               type="checkbox">
+                        <span th:text="${reason}"></span>
+                    </label>
+                </div>
+            </label>
+
+            <label>
+                <span><strong>Currencies</strong></span>
+                <div>
+                    <label th:each="currency : ${currencyOptions}">
+                        <input name="currencies"
+                               th:checked="${searchForm.currencies != null and #lists.contains(searchForm.currencies, currency)}"
+                               th:value="${currency}"
+                               type="checkbox">
+                        <span th:text="${currency}"></span>
+                    </label>
+                </div>
+            </label>
+
+            <label>
+                <span><strong>Statuses</strong></span>
+                <div>
+                    <label th:each="status : ${paymentStatuses}">
+                        <input name="statuses"
+                               th:checked="${searchForm.statuses != null and #lists.contains(searchForm.statuses, status)}"
+                               th:value="${status}"
+                               type="checkbox">
+                        <span th:text="${status}"></span>
+                    </label>
+                </div>
+            </label>
+
+            <label>
+                <span><strong>Violation Date</strong></span>
+                <div>
+                    <label>
+                        <span>From:</span>
+                        <input name="violationDateFrom" th:value="*{violationDateFrom}" type="date">
+                    </label>
+                    <label>
+                        <span>To:</span>
+                        <input name="violationDateTo" th:value="*{violationDateTo}" type="date">
+                    </label>
+                </div>
+            </label>
+
+            <label>
+                <span><strong>Payment Due Date</strong></span>
+                <div>
+                    <label>
+                        <span>From:</span>
+                        <input name="dueDateFrom" th:value="*{dueDateFrom}" type="date">
+                    </label>
+                    <label>
+                        <span>To:</span>
+                        <input name="dueDateTo" th:value="*{dueDateTo}" type="date">
+                    </label>
+                </div>
+            </label>
+
+            <label>
+                <span><strong>Companies</strong></span>
+                <div>
+                    <label th:each="company : ${companyNames}">
+                        <input name="companyNames"
+                               th:checked="${searchForm.companyNames != null and #lists.contains(searchForm.companyNames, company)}"
+                               th:value="${company}"
+                               type="checkbox">
+                        <span th:text="${company}"></span>
+                    </label>
+                </div>
+            </label>
+        </div>
+
+        <div class="order">
+            <h3>Order</h3>
+            <label>
+                <span><strong>Order by:</strong></span>
+                <select name="orderBy">
+                    <option th:selected="${searchForm.orderBy == ''}" value="">No sorting</option>
+                    <option th:each="column : ${sortableColumns}"
+                            th:selected="${searchForm.orderBy == column.column}"
+                            th:text="${column.label}"
+                            th:value="${column.column}">
+                    </option>
+                </select>
+            </label>
+            <label>
+                <span><strong>Direction:</strong></span>
+                <select name="orderDirection">
+                    <option th:selected="${searchForm.orderDirection == 'asc'}" value="asc">Ascending</option>
+                    <option th:selected="${searchForm.orderDirection == 'desc'}" value="desc">Descending</option>
+                </select>
             </label>
 
         </div>
-        <!--        <div class="filter">-->
-        <!--            <h3>Filter</h3>-->
-        <!--            <label>-->
-        <!--                <span><strong>Reason</strong></span>-->
-        <!--                <div>-->
-        <!--                    <label th:each="reason : ${ticketReasons}">-->
-        <!--                        <input name="reasons" th:value="${reason}" type="checkbox">-->
-        <!--                        <span th:text="${reason}"></span>-->
-        <!--                    </label>-->
-        <!--                </div>-->
-        <!--            </label>-->
-        <!--            <label>-->
-        <!--                <span><strong>Currencies</strong></span>-->
-        <!--                <div>-->
-        <!--                    <label th:each="currency : ${currencyOptions}">-->
-        <!--                        <input name="currencies" th:value="${currency}" type="checkbox">-->
-        <!--                        <span th:text="${currency}"></span>-->
-        <!--                    </label>-->
-        <!--                </div>-->
-        <!--            </label>-->
-        <!--            <label>-->
-        <!--                <span><strong>Statuses</strong></span>-->
-        <!--                <div>-->
-        <!--                    <label th:each="status : ${paymentStatuses}">-->
-        <!--                        <input name="statuses" th:value="${status}" type="checkbox">-->
-        <!--                        <span th:text="${status}"></span>-->
-        <!--                    </label>-->
-        <!--                </div>-->
-        <!--            </label>-->
-        <!--            <label>-->
-        <!--                <span><strong>Violation Date</strong></span>-->
-        <!--                <div>-->
-        <!--                    <label>-->
-        <!--                        <span>From:</span>-->
-        <!--                        <input name="violationDateFrom" type="date">-->
-        <!--                    </label>-->
-        <!--                    <label>-->
-        <!--                        <span>To:</span>-->
-        <!--                        <input name="violationDateTo" type="date">-->
-        <!--                    </label>-->
-        <!--                </div>-->
-        <!--            </label>-->
-
-        <!--            <label>-->
-        <!--                <span><strong>Payment Due Date</strong></span>-->
-        <!--                <div>-->
-        <!--                    <label>-->
-        <!--                        <span>From:</span>-->
-        <!--                        <input name="dueDateFrom" type="date">-->
-        <!--                    </label>-->
-        <!--                    <label>-->
-        <!--                        <span>To:</span>-->
-        <!--                        <input name="dueDateTo" type="date">-->
-        <!--                    </label>-->
-        <!--                </div>-->
-        <!--            </label>-->
-        <!--            <label>-->
-        <!--                <span><strong>Companies</strong></span>-->
-        <!--                <div>-->
-        <!--                    <label th:each="company : ${companyNames}">-->
-        <!--                        <input name="companyNames" th:value="${company}" type="checkbox">-->
-        <!--                        <span th:text="${company}"></span>-->
-        <!--                    </label>-->
-        <!--                </div>-->
-        <!--            </label>-->
-        <!--        </div>-->
-
-        <!--        <div class="order">-->
-        <!--            <h3>Order</h3>-->
-        <!--        </div>-->
 
     </div>
 
     <button type="submit">Search</button>
 </form>
+
 <table>
     <thead>
     <tr>
@@ -139,7 +176,6 @@
     </tr>
     </thead>
     <tbody>
-
     <tr th:each="ticket : ${tickets}">
         <td th:text="${ticket.employee.name}">First Name</td>
         <td th:text="${ticket.employee.surname}">Last Name</td>
