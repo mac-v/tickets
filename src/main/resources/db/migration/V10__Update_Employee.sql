@@ -1,0 +1,1 @@
+ALTER TABLE Employee ADD phone_number VARCHAR(20) NULL;

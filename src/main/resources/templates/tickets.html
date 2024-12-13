@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tickets</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            text-align: left;
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        body {
+            width: 90%;
+            border: 1px solid black;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>Tickets</h1>
+<form method="get" th:action="@{/tickets/search}">
+
+    <div class="form-section">
+        <div class="search">
+            <h3>Search</h3>
+            <label>
+                <input name="searchQuery" placeholder="By First Name, Last Name, Signature, Phone number" type="text">
+            </label>
+
+        </div>
+        <!--        <div class="filter">-->
+        <!--            <h3>Filter</h3>-->
+        <!--            <label>-->
+        <!--                <span><strong>Reason</strong></span>-->
+        <!--                <div>-->
+        <!--                    <label th:each="reason : ${ticketReasons}">-->
+        <!--                        <input name="reasons" th:value="${reason}" type="checkbox">-->
+        <!--                        <span th:text="${reason}"></span>-->
+        <!--                    </label>-->
+        <!--                </div>-->
+        <!--            </label>-->
+        <!--            <label>-->
+        <!--                <span><strong>Currencies</strong></span>-->
+        <!--                <div>-->
+        <!--                    <label th:each="currency : ${currencyOptions}">-->
+        <!--                        <input name="currencies" th:value="${currency}" type="checkbox">-->
+        <!--                        <span th:text="${currency}"></span>-->
+        <!--                    </label>-->
+        <!--                </div>-->
+        <!--            </label>-->
+        <!--            <label>-->
+        <!--                <span><strong>Statuses</strong></span>-->
+        <!--                <div>-->
+        <!--                    <label th:each="status : ${paymentStatuses}">-->
+        <!--                        <input name="statuses" th:value="${status}" type="checkbox">-->
+        <!--                        <span th:text="${status}"></span>-->
+        <!--                    </label>-->
+        <!--                </div>-->
+        <!--            </label>-->
+        <!--            <label>-->
+        <!--                <span><strong>Violation Date</strong></span>-->
+        <!--                <div>-->
+        <!--                    <label>-->
+        <!--                        <span>From:</span>-->
+        <!--                        <input name="violationDateFrom" type="date">-->
+        <!--                    </label>-->
+        <!--                    <label>-->
+        <!--                        <span>To:</span>-->
+        <!--                        <input name="violationDateTo" type="date">-->
+        <!--                    </label>-->
+        <!--                </div>-->
+        <!--            </label>-->
+
+        <!--            <label>-->
+        <!--                <span><strong>Payment Due Date</strong></span>-->
+        <!--                <div>-->
+        <!--                    <label>-->
+        <!--                        <span>From:</span>-->
+        <!--                        <input name="dueDateFrom" type="date">-->
+        <!--                    </label>-->
+        <!--                    <label>-->
+        <!--                        <span>To:</span>-->
+        <!--                        <input name="dueDateTo" type="date">-->
+        <!--                    </label>-->
+        <!--                </div>-->
+        <!--            </label>-->
+        <!--            <label>-->
+        <!--                <span><strong>Companies</strong></span>-->
+        <!--                <div>-->
+        <!--                    <label th:each="company : ${companyNames}">-->
+        <!--                        <input name="companyNames" th:value="${company}" type="checkbox">-->
+        <!--                        <span th:text="${company}"></span>-->
+        <!--                    </label>-->
+        <!--                </div>-->
+        <!--            </label>-->
+        <!--        </div>-->
+
+        <!--        <div class="order">-->
+        <!--            <h3>Order</h3>-->
+        <!--        </div>-->
+
+    </div>
+
+    <button type="submit">Search</button>
+</form>
+<table>
+    <thead>
+    <tr>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Phone no.</th>
+        <th>Company</th>
+        <th>Signature</th>
+        <th>Violation Date</th>
+        <th>Reason</th>
+        <th>Ticket Amount</th>
+        <th>Ticket Currency</th>
+        <th>Fee Amount</th>
+        <th>Fee Currency</th>
+        <th>Payment Date</th>
+        <th>Status</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    <tr th:each="ticket : ${tickets}">
+        <td th:text="${ticket.employee.name}">First Name</td>
+        <td th:text="${ticket.employee.surname}">Last Name</td>
+        <td th:text="${ticket.employee?.phoneNumber ?: 'No phone no.'}">Phone no.</td>
+        <td th:text="${ticket.employee.company?.name ?: 'No company'}">Company</td>
+        <td th:text="${ticket.ticketSignature}">Signature</td>
+        <td th:text="${ticket.violanceDate}">Violation Date</td>
+        <td th:text="${ticket.reason}">Reason</td>
+        <td th:text="${ticket.ticketAmount}">Ticket Amount</td>
+        <td th:text="${ticket.ticketCurrency}">Ticket Currency</td>
+        <td th:text="${ticket.feeAmount}">Fee Amount</td>
+        <td th:text="${ticket.feeCurrency}">Fee Currency</td>
+        <td th:text="${ticket.paymentDate}">Payment Date</td>
+        <td th:text="${ticket.status}">Status</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

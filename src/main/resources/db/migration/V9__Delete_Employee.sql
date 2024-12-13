@@ -1,0 +1,7 @@
+DELETE
+FROM Employee;
+
+
+
+
+

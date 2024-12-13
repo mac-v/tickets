@@ -1,50 +1,38 @@
 package pl.maciejowsky.tickets.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Employee {
+
     @Id
     @GeneratedValue
     private Long id;
-    @Column(length = 50)
+
+    @Column(length = 50, nullable = false)
     private String name;
-    @Column(length = 50)
+
+    @Column(length = 50, nullable = false)
     private String surname;
 
-    public Employee() {
-    }
+    @Column(length = 50, nullable = false)
+    private String employeeType;
 
-    public Employee(Long id, String name, String surname) {
-        this.id = id;
-        this.name = name;
-        this.surname = surname;
-    }
+    @Column(length = 20)
+    private String status;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(length = 20)
+    private String phoneNumber;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSurname() {
-        return surname;
-    }
-
-    public void setSurname(String surname) {
-        this.surname = surname;
-    }
+    @ManyToOne
+    @JoinColumn(name = "company_id", referencedColumnName = "id")
+    private Company company;
 }
