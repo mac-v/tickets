@@ -1,9 +1,6 @@
 package pl.maciejowsky.tickets.specification;
 
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Predicate;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 import pl.maciejowsky.tickets.domain.Ticket;
 import pl.maciejowsky.tickets.dto.TicketFilterDTO;
@@ -30,7 +27,6 @@ public class TicketSpecification {
             addDatePredicate(filterDTO.getDueDateTo(), "paymentDate", root, criteriaBuilder, predicates, false);
             addInPredicate(filterDTO.getCompanyNames(), "employee.company.name", root, criteriaBuilder, predicates);
             addOrderBy(filterDTO.getOrderBy(), filterDTO.getOrderDirection(), query, root, criteriaBuilder);
-            query.distinct(true);
             return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
         };
     }
@@ -50,11 +46,21 @@ public class TicketSpecification {
     private static void addOrderBy(String orderBy, String orderDirection, CriteriaQuery<?> query, Root<Ticket> root, CriteriaBuilder criteriaBuilder) {
         if (orderBy != null && !orderBy.isEmpty()) {
             if ("desc".equalsIgnoreCase(orderDirection)) {
-                query.orderBy(criteriaBuilder.desc(root.get(orderBy)));
+                query.orderBy(criteriaBuilder.desc(getFieldPath(orderBy, root)));
             } else {
-                query.orderBy(criteriaBuilder.asc(root.get(orderBy)));
+                query.orderBy(criteriaBuilder.asc(getFieldPath(orderBy, root)));
             }
         }
+    }
+
+    private static Path<?> getFieldPath(String fieldPath, Root<?> root) {
+        String[] fieldComponents = fieldPath.split("\\.");
+        Path<?> path = root;
+
+        for (String field : fieldComponents) {
+            path = path.get(field); // Dynamically navigate
+        }
+        return path;
     }
 
 

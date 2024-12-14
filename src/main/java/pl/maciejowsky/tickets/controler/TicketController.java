@@ -23,6 +23,12 @@ public class TicketController {
         this.ticketService = ticketService;
     }
 
+
+    @GetMapping("/")
+    public String getHome() {
+        return "home";
+    }
+
     @GetMapping("/tickets")
     public String getTickets(
             Model model) {

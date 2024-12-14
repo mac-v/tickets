@@ -1,197 +1,340 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
+<link rel="stylesheet"
+      th:href="@{/css/main.css}">
 <head>
     <title>Tickets</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            border: 1px solid #ddd;
-            padding: 8px;
-        }
-
-        th {
-            text-align: left;
-            background-color: #f2f2f2;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-
-        tr:hover {
-            background-color: #ddd;
-        }
-
-        body {
-            width: 90%;
-            border: 1px solid black;
-            margin: auto;
-        }
-    </style>
 </head>
 <body>
-<h1>Tickets</h1>
-<form method="get" th:action="@{/tickets/search}" th:object="${searchForm}">
-    <div class="form-section">
 
-        <div class="search">
-            <h3>Search</h3>
-            <label>
-                <input name="searchQuery" placeholder="By First Name, Last Name, Signature, Phone number"
-                       th:value="*{searchQuery}" type="text">
-            </label>
-        </div>
+<div th:insert="header :: header"></div>
+<div class="main">
+    <div class="ticket-form-search cell">
 
-        <div class="filter">
-            <h3>Filter</h3>
-            <label>
-                <span><strong>Reason</strong></span>
-                <div>
-                    <label th:each="reason : ${ticketReasons}">
-                        <input name="reasons"
-                               th:checked="${searchForm.reasons != null and #lists.contains(searchForm.reasons, reason)}"
-                               th:value="${reason}"
-                               type="checkbox">
-                        <span th:text="${reason}"></span>
-                    </label>
-                </div>
-            </label>
-
-            <label>
-                <span><strong>Currencies</strong></span>
-                <div>
-                    <label th:each="currency : ${currencyOptions}">
-                        <input name="currencies"
-                               th:checked="${searchForm.currencies != null and #lists.contains(searchForm.currencies, currency)}"
-                               th:value="${currency}"
-                               type="checkbox">
-                        <span th:text="${currency}"></span>
-                    </label>
-                </div>
-            </label>
-
-            <label>
-                <span><strong>Statuses</strong></span>
-                <div>
-                    <label th:each="status : ${paymentStatuses}">
-                        <input name="statuses"
-                               th:checked="${searchForm.statuses != null and #lists.contains(searchForm.statuses, status)}"
-                               th:value="${status}"
-                               type="checkbox">
-                        <span th:text="${status}"></span>
-                    </label>
-                </div>
-            </label>
-
-            <label>
-                <span><strong>Violation Date</strong></span>
-                <div>
+        <form method="get" th:action="@{/tickets/search}" th:object="${searchForm}">
+            <div class="form-section">
+                <h2>Search tickets</h2>
+                <div class="search">
+                    <h3>Search by</h3>
                     <label>
-                        <span>From:</span>
-                        <input name="violationDateFrom" th:value="*{violationDateFrom}" type="date">
-                    </label>
-                    <label>
-                        <span>To:</span>
-                        <input name="violationDateTo" th:value="*{violationDateTo}" type="date">
+                        <input class="search-input" name="searchQuery"
+                               placeholder="First Name, Last Name, Signature, Phone number"
+                               th:value="*{searchQuery}" type="text">
                     </label>
                 </div>
-            </label>
 
-            <label>
-                <span><strong>Payment Due Date</strong></span>
-                <div>
+                <div class="filter">
                     <label>
-                        <span>From:</span>
-                        <input name="dueDateFrom" th:value="*{dueDateFrom}" type="date">
+                        <span><strong>Reason: </strong></span>
+                        <div>
+                            <label th:each="reason : ${ticketReasons}">
+                                <input name="reasons"
+                                       th:checked="${searchForm.reasons != null and #lists.contains(searchForm.reasons, reason)}"
+                                       th:value="${reason}"
+                                       type="checkbox">
+                                <span th:text="${reason}"></span>
+                            </label>
+                        </div>
                     </label>
+
                     <label>
-                        <span>To:</span>
-                        <input name="dueDateTo" th:value="*{dueDateTo}" type="date">
+                        <span><strong>Currencies:</strong></span>
+                        <div>
+                            <label th:each="currency : ${currencyOptions}">
+                                <input name="currencies"
+                                       th:checked="${searchForm.currencies != null and #lists.contains(searchForm.currencies, currency)}"
+                                       th:value="${currency}"
+                                       type="checkbox">
+                                <span th:text="${currency}"></span>
+                            </label>
+                        </div>
+                    </label>
+
+                    <label>
+                        <span><strong>Statuses: </strong></span>
+                        <div>
+                            <label th:each="status : ${paymentStatuses}">
+                                <input name="statuses"
+                                       th:checked="${searchForm.statuses != null and #lists.contains(searchForm.statuses, status)}"
+                                       th:value="${status}"
+                                       type="checkbox">
+                                <span th:text="${status}"></span>
+                            </label>
+                        </div>
+                    </label>
+
+                    <label>
+                        <span><strong>Violation Date: </strong></span>
+                        <div>
+                            <label>
+                                <span>From:</span>
+                                <input name="violationDateFrom" th:value="*{violationDateFrom}" type="date">
+                            </label>
+                            <label>
+                                <span>To:</span>
+                                <input name="violationDateTo" th:value="*{violationDateTo}" type="date">
+                            </label>
+                        </div>
+                    </label>
+
+                    <label>
+                        <span><strong>Payment Due Date: </strong></span>
+                        <div>
+                            <label>
+                                <span>From:</span>
+                                <input name="dueDateFrom" th:value="*{dueDateFrom}" type="date">
+                            </label>
+                            <label>
+                                <span>To:</span>
+                                <input name="dueDateTo" th:value="*{dueDateTo}" type="date">
+                            </label>
+                        </div>
+                    </label>
+
+                    <label>
+                        <span><strong>Companies: </strong></span>
+                        <div>
+                            <label th:each="company : ${companyNames}">
+                                <input name="companyNames"
+                                       th:checked="${searchForm.companyNames != null and #lists.contains(searchForm.companyNames, company)}"
+                                       th:value="${company}"
+                                       type="checkbox">
+                                <span th:text="${company}"></span>
+                            </label>
+                        </div>
                     </label>
                 </div>
-            </label>
 
-            <label>
-                <span><strong>Companies</strong></span>
-                <div>
-                    <label th:each="company : ${companyNames}">
-                        <input name="companyNames"
-                               th:checked="${searchForm.companyNames != null and #lists.contains(searchForm.companyNames, company)}"
-                               th:value="${company}"
-                               type="checkbox">
-                        <span th:text="${company}"></span>
+                <div class="order">
+                    <label>
+                        <span><strong>Order by:</strong></span>
+                        <select name="orderBy">
+                            <option th:selected="${searchForm.orderBy == ''}" value="">No sorting</option>
+                            <option th:each="column : ${sortableColumns}"
+                                    th:selected="${searchForm.orderBy == column.column}"
+                                    th:text="${column.label}"
+                                    th:value="${column.column}">
+                            </option>
+                        </select>
                     </label>
+                    <label>
+                        <span><strong>Direction:</strong></span>
+                        <select name="orderDirection">
+                            <option th:selected="${searchForm.orderDirection == 'asc'}" value="asc">Ascending</option>
+                            <option th:selected="${searchForm.orderDirection == 'desc'}" value="desc">Descending
+                            </option>
+                        </select>
+                    </label>
+
                 </div>
-            </label>
-        </div>
 
-        <div class="order">
-            <h3>Order</h3>
-            <label>
-                <span><strong>Order by:</strong></span>
-                <select name="orderBy">
-                    <option th:selected="${searchForm.orderBy == ''}" value="">No sorting</option>
-                    <option th:each="column : ${sortableColumns}"
-                            th:selected="${searchForm.orderBy == column.column}"
-                            th:text="${column.label}"
-                            th:value="${column.column}">
-                    </option>
-                </select>
-            </label>
-            <label>
-                <span><strong>Direction:</strong></span>
-                <select name="orderDirection">
-                    <option th:selected="${searchForm.orderDirection == 'asc'}" value="asc">Ascending</option>
-                    <option th:selected="${searchForm.orderDirection == 'desc'}" value="desc">Descending</option>
-                </select>
-            </label>
+            </div>
 
-        </div>
+            <button class="submit-button" type="submit">Search</button>
+
+            <a href="/tickets">Refresh</a>
+        </form>
 
     </div>
+    <div class="tickets">
+        <table>
+            <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Phone no.</th>
+                <th>Company</th>
+                <th>Signature</th>
+                <th>Violation Date</th>
+                <th>Reason</th>
+                <th>Ticket Amount</th>
+                <th>Ticket Currency</th>
+                <th>Fee Amount</th>
+                <th>Fee Currency</th>
+                <th>Payment Date</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="ticket : ${tickets}">
+                <td th:text="${ticket.employee.name}">First Name</td>
+                <td th:text="${ticket.employee.surname}">Last Name</td>
+                <td th:text="${ticket.employee?.phoneNumber ?: 'No phone no.'}">Phone no.</td>
+                <td th:text="${ticket.employee.company?.name ?: 'No company'}">Company</td>
+                <td th:text="${ticket.ticketSignature}">Signature</td>
+                <td th:text="${ticket.violanceDate}">Violation Date</td>
+                <td th:text="${ticket.reason}">Reason</td>
+                <td th:text="${ticket.ticketAmount}">Ticket Amount</td>
+                <td th:text="${ticket.ticketCurrency}">Ticket Currency</td>
+                <td th:text="${ticket.feeAmount}">Fee Amount</td>
+                <td th:text="${ticket.feeCurrency}">Fee Currency</td>
+                <td th:text="${ticket.paymentDate}">Payment Date</td>
+                <td th:text="${ticket.status}">Status</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <button type="submit">Search</button>
-</form>
 
-<table>
-    <thead>
-    <tr>
-        <th>First Name</th>
-        <th>Last Name</th>
-        <th>Phone no.</th>
-        <th>Company</th>
-        <th>Signature</th>
-        <th>Violation Date</th>
-        <th>Reason</th>
-        <th>Ticket Amount</th>
-        <th>Ticket Currency</th>
-        <th>Fee Amount</th>
-        <th>Fee Currency</th>
-        <th>Payment Date</th>
-        <th>Status</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="ticket : ${tickets}">
-        <td th:text="${ticket.employee.name}">First Name</td>
-        <td th:text="${ticket.employee.surname}">Last Name</td>
-        <td th:text="${ticket.employee?.phoneNumber ?: 'No phone no.'}">Phone no.</td>
-        <td th:text="${ticket.employee.company?.name ?: 'No company'}">Company</td>
-        <td th:text="${ticket.ticketSignature}">Signature</td>
-        <td th:text="${ticket.violanceDate}">Violation Date</td>
-        <td th:text="${ticket.reason}">Reason</td>
-        <td th:text="${ticket.ticketAmount}">Ticket Amount</td>
-        <td th:text="${ticket.ticketCurrency}">Ticket Currency</td>
-        <td th:text="${ticket.feeAmount}">Fee Amount</td>
-        <td th:text="${ticket.feeCurrency}">Fee Currency</td>
-        <td th:text="${ticket.paymentDate}">Payment Date</td>
-        <td th:text="${ticket.status}">Status</td>
-    </tr>
-    </tbody>
-</table>
+    <div class="ticket-form-add cell">
+        <h2>Add new ticket</h2>
+        <form method="post" th:action="@{/tickets/add}">
+
+            <div>
+                <label>
+                    <strong>Employee Type:</strong>
+                    <select id="employeeType" name="employeeType" onchange="toggleEmployeeFields()">
+                        <option value="physical">Physical Employee</option>
+                        <option value="office">Office Employee</option>
+                    </select>
+                </label>
+            </div>
+
+            <div id="physicalEmployeeSection">
+                <label>
+                    <strong>Select Physical Employee:</strong>
+                    <select name="physicalEmployee">
+                        <option th:each="employee : ${allPhysicalEmployees}"
+                                th:text="${employee.name + ' ' + employee.surname}"
+                                th:value="${employee.id}">
+                            Employee
+                        </option>
+                    </select>
+                </label>
+            </div>
+
+            <div id="officeEmployeeSection" style="display: none;">
+                <label>
+                    <strong>Office Employee First Name:</strong>
+                    <input name="officeEmployeeFirstName" placeholder="First Name" type="text">
+                </label>
+                <label>
+                    <strong>Office Employee Last Name:</strong>
+                    <input name="officeEmployeeLastName" placeholder="Last Name" type="text">
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <strong>Signature:</strong>
+                    <input id="ticketSignature" name="ticketSignature" placeholder="Ticket Signature" type="text">
+                    <span id="signatureWarning" style="color: red; display: none;">Ticket with this signature already exists in the system.</span>
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <strong>Violation Date:</strong>
+                    <input name="violationDate" type="date">
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <strong>Reason:</strong>
+                    <select id="violationReason" name="violationReason" onchange="toggleOtherReasonField()">
+                        <option value="speeding">Speeding</option>
+                        <option value="parking">Illegal Parking</option>
+                        <option value="redlight">Running a Red Light</option>
+                        <option value="other">Other</option>
+                    </select>
+                </label>
+                <input id="otherReason" name="otherReason" placeholder="Specify Reason" style="display: none;"
+                       type="text">
+            </div>
+
+            <div>
+                <label>
+                    <strong>Ticket Amount:</strong>
+                    <input name="ticketAmount" placeholder="Amount" type="number">
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <strong>Currency:</strong>
+                    <select name="currency">
+                        <option value="PLN">PLN</option>
+                        <option value="EUR">EUR</option>
+                    </select>
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <strong>Administrative Fee:</strong>
+                    <input name="administrativeFee" readonly type="number" value="100">
+                </label>
+            </div>
+
+            <div>
+                <label>
+                    <strong>Attachment (PDF):</strong>
+                    <input accept="application/pdf" name="document" type="file">
+                </label>
+            </div>
+
+            <div>
+                <label id="last-label-ticket-form">
+                    <strong>Due Date:</strong>
+                    <input name="dueDate" type="date">
+                </label>
+            </div>
+
+            <div>
+                <button class="submit-button" type="submit">Add Ticket</button>
+            </div>
+
+        </form>
+    </div>
+
+    <script>
+        function toggleEmployeeFields() {
+            const employeeType = document.getElementById("employeeType").value;
+            const physicalEmployeeSection = document.getElementById("physicalEmployeeSection");
+            const officeEmployeeSection = document.getElementById("officeEmployeeSection");
+
+            if (employeeType === "physical") {
+                physicalEmployeeSection.style.display = "block";
+                officeEmployeeSection.style.display = "none";
+            } else {
+                physicalEmployeeSection.style.display = "none";
+                officeEmployeeSection.style.display = "block";
+            }
+        }
+
+        function toggleOtherReasonField() {
+            const reason = document.getElementById("violationReason").value;
+            const otherReasonField = document.getElementById("otherReason");
+
+            if (reason === "other") {
+                otherReasonField.style.display = "block";
+            } else {
+                otherReasonField.style.display = "none";
+            }
+        }
+
+        // Example check for duplicate signature (replace with actual backend integration)
+        document.getElementById("ticketSignature").addEventListener("change", function () {
+            const signature = this.value;
+
+            // Simulating an API call (replace this with your actual logic)
+            const existingSignatures = ["ABC123", "DEF456"]; // Replace with actual API data
+            const warning = document.getElementById("signatureWarning");
+
+            if (existingSignatures.includes(signature)) {
+                warning.style.display = "inline";
+            } else {
+                warning.style.display = "none";
+            }
+        });
+    </script>
+</div>
+
+
+<div th:insert="footer :: footer"></div>
+
+
 </body>
 </html>
