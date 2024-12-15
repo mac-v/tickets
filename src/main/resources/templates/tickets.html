@@ -11,7 +11,6 @@
 <div th:insert="header :: header"></div>
 <div class="main">
     <div class="ticket-form-search cell">
-
         <form method="get" th:action="@{/tickets/search}" th:object="${searchForm}">
             <div class="form-section">
                 <h2>Search tickets</h2>
@@ -179,24 +178,30 @@
 
     <div class="ticket-form-add cell">
         <h2>Add new ticket</h2>
-        <form method="post" th:action="@{/tickets/add}">
+        <form enctype="multipart/form-data" method="post" th:action="@{/tickets}"
+              th:object="${addForm}">
 
             <div>
                 <label>
-                    <strong>Employee Type:</strong>
+                    <strong>Employee type:</strong>
                     <select id="employeeType" name="employeeType" onchange="toggleEmployeeFields()">
-                        <option value="physical">Physical Employee</option>
-                        <option value="office">Office Employee</option>
+                        <th:block th:each="employeeType : ${employeeTypes}">
+                            <option th:selected="${employeeType == defaultEmployeeType}" th:text="${employeeType}"
+                                    th:value="${employeeType}">
+                            </option>
+                        </th:block>
                     </select>
                 </label>
             </div>
 
-            <div id="physicalEmployeeSection">
+            <div id="labourerEmployeeSection">
                 <label>
-                    <strong>Select Physical Employee:</strong>
-                    <select name="physicalEmployee">
-                        <option th:each="employee : ${allPhysicalEmployees}"
-                                th:text="${employee.name + ' ' + employee.surname}"
+                    <strong>Employee:</strong>
+                    <select id="labourerEmployeeSelect"
+                            name="labourerEmployeeId">
+
+                        <option th:each="employee : ${employees}"
+                                th:text="${employee.name + ' ' + employee.surname + ' | ' + employee.status}"
                                 th:value="${employee.id}">
                             Employee
                         </option>
@@ -204,49 +209,51 @@
                 </label>
             </div>
 
-            <div id="officeEmployeeSection" style="display: none;">
+            <div id="clerkEmployeeSection" style="display: none;">
                 <label>
-                    <strong>Office Employee First Name:</strong>
-                    <input name="officeEmployeeFirstName" placeholder="First Name" type="text">
+                    <strong>First name:</strong>
+                    <input name="clerkEmployeeFirstName" placeholder="First Name" type="text">
                 </label>
                 <label>
-                    <strong>Office Employee Last Name:</strong>
-                    <input name="officeEmployeeLastName" placeholder="Last Name" type="text">
+                    <strong>Last name:</strong>
+                    <input name="clerkEmployeeLastName" placeholder="Last Name" type="text">
                 </label>
             </div>
 
             <div>
                 <label>
                     <strong>Signature:</strong>
-                    <input id="ticketSignature" name="ticketSignature" placeholder="Ticket Signature" type="text">
-                    <span id="signatureWarning" style="color: red; display: none;">Ticket with this signature already exists in the system.</span>
+                    <input id="ticketSignature" name="ticketSignature" placeholder="Signature" type="text">
                 </label>
             </div>
 
             <div>
                 <label>
-                    <strong>Violation Date:</strong>
-                    <input name="violationDate" type="date">
+                    <strong>Violation date:</strong>
+                    <input name="violanceDate" type="date">
                 </label>
             </div>
 
             <div>
                 <label>
                     <strong>Reason:</strong>
-                    <select id="violationReason" name="violationReason" onchange="toggleOtherReasonField()">
-                        <option value="speeding">Speeding</option>
-                        <option value="parking">Illegal Parking</option>
-                        <option value="redlight">Running a Red Light</option>
-                        <option value="other">Other</option>
-                    </select>
+                    <div class="reason-container">
+                        <select id="reason" name="reason" onchange="toggleOtherReasonField()">
+                            <th:block th:each="reason : ${ticketReasons}">
+                                <option th:text="${reason}" th:value="${reason}"></option>
+                            </th:block>
+                        </select>
+
+                        <input id="customReason" name="customReason" placeholder="Specify Reason" style="display: none;"
+                               type="text">
+                    </div>
+
                 </label>
-                <input id="otherReason" name="otherReason" placeholder="Specify Reason" style="display: none;"
-                       type="text">
             </div>
 
             <div>
                 <label>
-                    <strong>Ticket Amount:</strong>
+                    <strong>Ticket amount:</strong>
                     <input name="ticketAmount" placeholder="Amount" type="number">
                 </label>
             </div>
@@ -254,34 +261,38 @@
             <div>
                 <label>
                     <strong>Currency:</strong>
-                    <select name="currency">
-                        <option value="PLN">PLN</option>
-                        <option value="EUR">EUR</option>
+                    <select name="ticketCurrency">
+                        <th:block th:each="currency : ${currencyOptions}">
+                            <option th:text="${currency}" th:value="${currency}"></option>
+                        </th:block>
                     </select>
                 </label>
             </div>
 
             <div>
                 <label>
-                    <strong>Administrative Fee:</strong>
-                    <input name="administrativeFee" readonly type="number" value="100">
+                    <strong>Fee (PLN):</strong>
+                    <input name="feeAmount" readonly type="number" value="100">
                 </label>
             </div>
 
             <div>
                 <label>
                     <strong>Attachment (PDF):</strong>
-                    <input accept="application/pdf" name="document" type="file">
+                    <input accept="application/pdf" name="attachmentPath"
+                           type="file">
                 </label>
             </div>
 
             <div>
                 <label id="last-label-ticket-form">
-                    <strong>Due Date:</strong>
-                    <input name="dueDate" type="date">
+                    <strong>Due date:</strong>
+                    <input name="paymentDate" type="date">
                 </label>
             </div>
-
+            <div style="color: red;" th:if="${errorMessage}">
+                <p th:text="${errorMessage}"></p>
+            </div>
             <div>
                 <button class="submit-button" type="submit">Add Ticket</button>
             </div>
@@ -292,43 +303,29 @@
     <script>
         function toggleEmployeeFields() {
             const employeeType = document.getElementById("employeeType").value;
-            const physicalEmployeeSection = document.getElementById("physicalEmployeeSection");
-            const officeEmployeeSection = document.getElementById("officeEmployeeSection");
+            const labourerEmployeeSection = document.getElementById("labourerEmployeeSection");
+            const clerkEmployeeSection = document.getElementById("clerkEmployeeSection");
 
-            if (employeeType === "physical") {
-                physicalEmployeeSection.style.display = "block";
-                officeEmployeeSection.style.display = "none";
+            if (employeeType === "LABOURER") {
+                labourerEmployeeSection.style.display = "block";
+                clerkEmployeeSection.style.display = "none";
             } else {
-                physicalEmployeeSection.style.display = "none";
-                officeEmployeeSection.style.display = "block";
+                labourerEmployeeSection.style.display = "none";
+                clerkEmployeeSection.style.display = "block";
             }
         }
 
         function toggleOtherReasonField() {
-            const reason = document.getElementById("violationReason").value;
-            const otherReasonField = document.getElementById("otherReason");
+            const reason = document.getElementById("reason").value;
+            const customReason = document.getElementById("customReason");
 
-            if (reason === "other") {
-                otherReasonField.style.display = "block";
+            if (reason === "OTHER") {
+                customReason.style.display = "block";
             } else {
-                otherReasonField.style.display = "none";
+                customReason.style.display = "none";
             }
         }
 
-        // Example check for duplicate signature (replace with actual backend integration)
-        document.getElementById("ticketSignature").addEventListener("change", function () {
-            const signature = this.value;
-
-            // Simulating an API call (replace this with your actual logic)
-            const existingSignatures = ["ABC123", "DEF456"]; // Replace with actual API data
-            const warning = document.getElementById("signatureWarning");
-
-            if (existingSignatures.includes(signature)) {
-                warning.style.display = "inline";
-            } else {
-                warning.style.display = "none";
-            }
-        });
     </script>
 </div>
 

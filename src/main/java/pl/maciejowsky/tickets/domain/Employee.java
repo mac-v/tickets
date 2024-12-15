@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 public class Employee {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(length = 50, nullable = false)
@@ -35,4 +35,5 @@ public class Employee {
     @ManyToOne
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     private Company company;
+
 }

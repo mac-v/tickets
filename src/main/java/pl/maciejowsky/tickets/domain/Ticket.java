@@ -1,7 +1,10 @@
 package pl.maciejowsky.tickets.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,34 +21,34 @@ public class Ticket {
     private Long id;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "employee_id", nullable = false, foreignKey = @ForeignKey(name = "FK_Ticket_Employee"))
+    @JoinColumn(name = "employee_id")
     private Employee employee;
 
-    @Column(name = "ticket_signature", length = 50, nullable = false)
+    @Column(name = "ticket_signature")
     private String ticketSignature;
 
-    @Column(name = "violance_date", nullable = false)
+    @Column(name = "violance_date")
     private LocalDate violanceDate;
 
-    @Column(length = 255, nullable = false)
+    @Column()
     private String reason;
 
-    @Column(name = "ticket_amount", precision = 10, scale = 2, nullable = false)
+    @Column(name = "ticket_amount")
     private BigDecimal ticketAmount;
 
-    @Column(name = "ticket_currency", length = 10, nullable = false)
+    @Column(name = "ticket_currency")
     private String ticketCurrency;
 
-    @Column(name = "fee_amount", precision = 10, scale = 2, nullable = false)
+    @Column(name = "fee_amount")
     private BigDecimal feeAmount;
 
-    @Column(name = "fee_currency", length = 10, nullable = false)
-    private String feeCurrency;
+    @Column(name = "fee_currency")
+    private String feeCurrency = "PLN";
 
-    @Column(name = "payment_date", nullable = false)
+    @Column(name = "payment_date")
     private LocalDate paymentDate;
 
-    @Column(length = 50, nullable = false)
-    private String status;
+    @Column()
+    private String status = "UNPAID";
 
 }

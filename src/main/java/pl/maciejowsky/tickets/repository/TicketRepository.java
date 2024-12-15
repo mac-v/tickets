@@ -8,5 +8,5 @@ import pl.maciejowsky.tickets.domain.Ticket;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long>, JpaSpecificationExecutor<Ticket> {
 
-
+    boolean existsTicketsByticketSignature(String signature);
 }
