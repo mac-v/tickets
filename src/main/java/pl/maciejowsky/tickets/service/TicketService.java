@@ -88,6 +88,15 @@ public class TicketService {
             ticket.setReason(ticketDTO.getCustomReason());
         }
 
+        if (ticketDTO.getPdfFile() != null && !ticketDTO.getPdfFile().isEmpty()) {
+            System.out.println("PDF FILE !!!");
+            System.out.println(ticketDTO.getPdfFile());
+            try {
+                ticket.setPdfFile(ticketDTO.getPdfFile().getBytes());
+            } catch (Exception e) {
+                throw new IllegalArgumentException("Failed to process PDF file", e);
+            }
+        }
         return ticket;
     }
 }

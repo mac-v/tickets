@@ -51,4 +51,6 @@ public class Ticket {
     @Column()
     private String status = "UNPAID";
 
+    @Column(name = "pdf_file")
+    private byte[] pdfFile;
 }

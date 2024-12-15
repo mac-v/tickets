@@ -1,0 +1,1 @@
+ALTER TABLE Ticket ADD pdf_file VARBINARY(MAX) NULL;

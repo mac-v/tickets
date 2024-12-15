@@ -31,11 +31,11 @@ public class TicketDTO {
     private BigDecimal feeAmount;
 
     private String ticketCurrency;
-
-    private MultipartFile attachmentPath;
-
+    
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate paymentDate;
+
+    private MultipartFile pdfFile;
 
 
 }
