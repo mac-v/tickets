@@ -156,7 +156,8 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="ticket : ${tickets}">
+            <tr th:class="${ticket.status == 'PAID' ? 'row-paid' : (ticket.status == 'UNPAID' ? 'row-unpaid' : '')}"
+                th:each="ticket : ${tickets}">
                 <td th:text="${ticket.employee.name}">First Name</td>
                 <td th:text="${ticket.employee.surname}">Last Name</td>
                 <td th:text="${ticket.employee?.phoneNumber ?: 'No phone no.'}">Phone no.</td>
@@ -294,8 +295,12 @@
                 <p th:text="${errorMessage}"></p>
             </div>
             <div>
+                <button class="reset-button" onclick="resetAddTicketForm()" type="button">Reset</button>
+            </div>
+            <div>
                 <button class="submit-button" type="submit">Add Ticket</button>
             </div>
+
 
         </form>
     </div>
@@ -323,6 +328,13 @@
                 customReason.style.display = "block";
             } else {
                 customReason.style.display = "none";
+            }
+        }
+
+        function resetAddTicketForm() {
+            const addTicketForm = document.querySelector('form[th\\:action="@{/tickets}"]');
+            if (addTicketForm) {
+                addTicketForm.reset();
             }
         }
 

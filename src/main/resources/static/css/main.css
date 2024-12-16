@@ -136,7 +136,7 @@ tr:nth-child(even) {
 }
 
 
-.search-input, .submit-button {
+.search-input, .submit-button, .reset-button {
     width: 80% !important;
 
 }
@@ -147,6 +147,11 @@ tr:nth-child(even) {
     background-color: var(--color-blue400);
 }
 
+.reset-button {
+    display: block;
+    margin: 1rem auto 0 auto;
+    background-color: orangered;
+}
 
 .ticket-form-add form div label {
     display: flex;
@@ -154,9 +159,8 @@ tr:nth-child(even) {
     border-bottom: var(--color-black300) solid 1px;
     align-items: center;
     padding: .4rem 0;
-
-
 }
+
 
 #last-label-ticket-form {
     border-bottom: none;
@@ -224,6 +228,13 @@ input::placeholder {
     font-style: italic;
 }
 
+.row-paid {
+    background-color: #d4edda;
+}
+
+.row-unpaid {
+    background-color: #f8d7da;
+}
 
 
 
